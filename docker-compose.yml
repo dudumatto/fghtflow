@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: fightflow-postgres
+    environment:
+      POSTGRES_DB: fightflow
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - fightflow_pg_data:/var/lib/postgresql/data
+
+volumes:
+  fightflow_pg_data:

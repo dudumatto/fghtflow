@@ -1,0 +1,31 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/fightflow}
+    username: ${DB_USER:fightflow}
+    password: ${DB_PASSWORD:fightflow}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+
+logging:
+  level:
+    org.springframework.security: INFO
+
+fightflow:
+  jwt:
+    # DEV default only. Override in production.
+    secret: ${JWT_SECRET:change-me-change-me-change-me-change-me}
+    issuer: ${JWT_ISSUER:fightflow}
+    ttlMinutes: ${JWT_TTL_MINUTES:240}
+    refreshTtlDays: ${JWT_REFRESH_TTL_DAYS:14}
+    refreshCookieSecure: ${JWT_REFRESH_COOKIE_SECURE:false}
+  upload:
+    maxBytes: ${UPLOAD_MAX_BYTES:10485760} # 10MB
+    rootDir: ${UPLOAD_ROOT_DIR:uploads}

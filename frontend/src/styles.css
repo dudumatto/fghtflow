@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 10 12 16;
+  --fg: 236 242 248;
+  --muted: 148 163 184;
+  --card: 17 24 39;
+  --border: 51 65 85;
+  --primary: 59 130 246;
+  --danger: 239 68 68;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  background: rgb(var(--bg));
+  color: rgb(var(--fg));
+}
+
+:focus-visible {
+  outline: 2px solid rgb(var(--primary));
+  outline-offset: 2px;
+}
+
