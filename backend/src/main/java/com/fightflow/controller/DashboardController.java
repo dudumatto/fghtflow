@@ -1,6 +1,7 @@
 package com.fightflow.controller;
 
 import com.fightflow.dto.common.ApiResponse;
+import com.fightflow.dto.dashboard.AulasDashboardResponse;
 import com.fightflow.dto.dashboard.AtletaDashboardResponse;
 import com.fightflow.security.SecurityUtil;
 import com.fightflow.service.DashboardService;
@@ -21,5 +22,10 @@ public class DashboardController {
   @GetMapping("/atleta")
   public ResponseEntity<ApiResponse<AtletaDashboardResponse>> atleta() {
     return ResponseEntity.ok(ApiResponse.ok(dashboardService.atletaDashboard(SecurityUtil.currentUser())));
+  }
+
+  @GetMapping("/aulas")
+  public ResponseEntity<ApiResponse<AulasDashboardResponse>> aulas() {
+    return ResponseEntity.ok(ApiResponse.ok(dashboardService.aulasDashboard(SecurityUtil.currentUser())));
   }
 }

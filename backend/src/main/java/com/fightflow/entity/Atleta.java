@@ -20,6 +20,11 @@ public class Atleta {
       foreignKey = @ForeignKey(name = "fk_atleta_academia"))
   private Academia academia;
 
+  @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "aluno_id", unique = true,
+      foreignKey = @ForeignKey(name = "fk_atleta_aluno"))
+  private Aluno aluno;
+
   @Column(length = 30)
   private String faixa;
 
@@ -55,6 +60,14 @@ public class Atleta {
     this.academia = academia;
   }
 
+  public Aluno getAluno() {
+    return aluno;
+  }
+
+  public void setAluno(Aluno aluno) {
+    this.aluno = aluno;
+  }
+
   public String getFaixa() {
     return faixa;
   }
@@ -87,4 +100,3 @@ public class Atleta {
     this.createdAt = createdAt;
   }
 }
-

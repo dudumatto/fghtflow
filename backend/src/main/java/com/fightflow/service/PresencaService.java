@@ -20,11 +20,18 @@ public class PresencaService {
   private final PresencaRepository presencaRepository;
   private final TreinoRepository treinoRepository;
   private final AtletaRepository atletaRepository;
+  private final FinanceiroBloqueioService financeiroBloqueioService;
 
-  public PresencaService(PresencaRepository presencaRepository, TreinoRepository treinoRepository, AtletaRepository atletaRepository) {
+  public PresencaService(
+      PresencaRepository presencaRepository,
+      TreinoRepository treinoRepository,
+      AtletaRepository atletaRepository,
+      FinanceiroBloqueioService financeiroBloqueioService
+  ) {
     this.presencaRepository = presencaRepository;
     this.treinoRepository = treinoRepository;
     this.atletaRepository = atletaRepository;
+    this.financeiroBloqueioService = financeiroBloqueioService;
   }
 
   @Transactional
@@ -45,6 +52,7 @@ public class PresencaService {
     if (!atleta.getAcademia().getId().equals(me.getAcademiaId())) {
       throw new ForbiddenException("Atleta is not in your academia");
     }
+    financeiroBloqueioService.assertPodeRegistrarPresenca(atleta.getAluno());
 
     Presenca p = new Presenca();
     p.setTreino(treino);
@@ -52,4 +60,3 @@ public class PresencaService {
     presencaRepository.save(p);
   }
 }
-

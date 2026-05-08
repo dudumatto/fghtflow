@@ -1,0 +1,6 @@
+/uploads/
+/backend/target/
+/frontend/node_modules/
+cookies*.txt
+tmp_*/
+out.json

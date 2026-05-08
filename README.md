@@ -2,6 +2,51 @@
 
 Production-ready SaaS for Jiu-Jitsu academies: athletes, training sessions, competitions, fights, and performance analytics.
 
+## Local Setup (Recommended)
+
+### 1) PostgreSQL (Docker)
+
+Single recommended credential set (dev):
+- `POSTGRES_DB=fightflow`
+- `POSTGRES_USER=fightflow`
+- `POSTGRES_PASSWORD=fightflow`
+
+Option A (docker run):
+```bash
+docker rm -f fightflow-pg
+docker run --name fightflow-pg -e POSTGRES_DB=fightflow -e POSTGRES_USER=fightflow -e POSTGRES_PASSWORD=fightflow -p 5432:5432 -d postgres:16
+```
+
+Option B (docker compose):
+```bash
+docker compose up -d
+```
+
+### 2) Backend
+
+Config via env vars (see `backend/.env.example`):
+- `DB_URL=jdbc:postgresql://localhost:5432/fightflow`
+- `DB_USER=fightflow`
+- `DB_PASSWORD=fightflow`
+
+Run:
+```bash
+cd backend
+mvn spring-boot:run
+```
+
+### 3) Frontend
+
+Set API base URL (see `frontend/.env.example`):
+- `VITE_API_BASE=http://localhost:8080`
+
+Run:
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
 ## Tech
 
 Backend:
@@ -54,7 +99,7 @@ Success:
 
 Error:
 ```json
-{ "success": false, "error": { "status": 403, "message": "Forbidden", "path": "/..." } }
+{ "success": false, "error": "Forbidden" }
 ```
 
 ### Pagination + filters
@@ -75,4 +120,3 @@ POST /auth/login
 POST /auth/refresh
 POST /auth/logout
 ```
-

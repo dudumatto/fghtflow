@@ -8,20 +8,23 @@ import com.fightflow.exception.ForbiddenException;
 import com.fightflow.exception.NotFoundException;
 import com.fightflow.repository.AtletaRepository;
 import com.fightflow.security.UserPrincipal;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AtletaService {
   private final AtletaRepository atletaRepository;
+  private final FinanceiroBloqueioService financeiroBloqueioService;
 
-  public AtletaService(AtletaRepository atletaRepository) {
+  public AtletaService(AtletaRepository atletaRepository, FinanceiroBloqueioService financeiroBloqueioService) {
     this.atletaRepository = atletaRepository;
+    this.financeiroBloqueioService = financeiroBloqueioService;
   }
 
+  @Transactional(readOnly = true)
   public AtletaProfileResponse getMe(UserPrincipal me) {
     requireAtleta(me);
-    Atleta a = atletaRepository.findByUsuarioId(me.getId())
+    Atleta a = atletaRepository.findByUsuarioIdWithUsuarioAndAcademia(me.getId())
         .orElseThrow(() -> new NotFoundException("Atleta not found"));
     return toProfile(a);
   }
@@ -29,7 +32,7 @@ public class AtletaService {
   @Transactional
   public AtletaProfileResponse updateMe(UserPrincipal me, AtletaUpdateRequest req) {
     requireAtleta(me);
-    Atleta a = atletaRepository.findByUsuarioId(me.getId())
+    Atleta a = atletaRepository.findByUsuarioIdWithUsuarioAndAcademia(me.getId())
         .orElseThrow(() -> new NotFoundException("Atleta not found"));
     if (req.faixa() != null) a.setFaixa(req.faixa());
     if (req.peso() != null) a.setPeso(req.peso());
@@ -52,8 +55,8 @@ public class AtletaService {
         a.getUsuario().getEmail(),
         a.getFaixa(),
         a.getPeso(),
-        a.getCategoria()
+        a.getCategoria(),
+        financeiroBloqueioService.status(a.getAluno())
     );
   }
 }
-

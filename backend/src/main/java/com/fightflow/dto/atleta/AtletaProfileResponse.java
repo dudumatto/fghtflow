@@ -1,5 +1,7 @@
 package com.fightflow.dto.atleta;
 
+import com.fightflow.dto.financeiro.FinanceiroStatusResponse;
+
 public record AtletaProfileResponse(
     Long atletaId,
     Long usuarioId,
@@ -7,6 +9,6 @@ public record AtletaProfileResponse(
     String email,
     String faixa,
     Double peso,
-    String categoria
+    String categoria,
+    FinanceiroStatusResponse financeiro
 ) {}
-

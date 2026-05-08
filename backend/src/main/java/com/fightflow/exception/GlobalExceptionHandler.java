@@ -3,8 +3,11 @@ package com.fightflow.exception;
 import com.fightflow.dto.common.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.Instant;
+import jakarta.persistence.EntityNotFoundException;
+import org.hibernate.LazyInitializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -59,9 +62,41 @@ public class GlobalExceptionHandler {
     return build(HttpStatus.UNSUPPORTED_MEDIA_TYPE, ex.getMessage(), req.getRequestURI());
   }
 
+  @ExceptionHandler(ConflictException.class)
+  public ResponseEntity<ApiResponse<Void>> handleConflict(ConflictException ex, HttpServletRequest req) {
+    return build(HttpStatus.CONFLICT, ex.getMessage(), req.getRequestURI());
+  }
+
   @ExceptionHandler({BadCredentialsException.class, UsernameNotFoundException.class})
   public ResponseEntity<ApiResponse<Void>> handleAuthFailure(Exception ex, HttpServletRequest req) {
     return build(HttpStatus.UNAUTHORIZED, "Invalid credentials", req.getRequestURI());
+  }
+
+  @ExceptionHandler(DataIntegrityViolationException.class)
+  public ResponseEntity<ApiResponse<Void>> handleDataIntegrity(DataIntegrityViolationException ex, HttpServletRequest req) {
+    String msg = "Data integrity violation";
+    String raw = String.valueOf(ex.getMostSpecificCause() != null ? ex.getMostSpecificCause().getMessage() : ex.getMessage());
+    // Best-effort mapping: avoid leaking DB internals but return the right status for common cases.
+    if (raw.toLowerCase().contains("uk_usuario_email") || raw.toLowerCase().contains("usuarios") && raw.toLowerCase().contains("email")) {
+      return build(HttpStatus.CONFLICT, "Email already in use", req.getRequestURI());
+    }
+    return build(HttpStatus.BAD_REQUEST, msg, req.getRequestURI());
+  }
+
+  @ExceptionHandler(EntityNotFoundException.class)
+  public ResponseEntity<ApiResponse<Void>> handleEntityNotFound(EntityNotFoundException ex, HttpServletRequest req) {
+    return build(HttpStatus.NOT_FOUND, "Not found", req.getRequestURI());
+  }
+
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<ApiResponse<Void>> handleIllegalArgument(IllegalArgumentException ex, HttpServletRequest req) {
+    return build(HttpStatus.BAD_REQUEST, ex.getMessage(), req.getRequestURI());
+  }
+
+  @ExceptionHandler(LazyInitializationException.class)
+  public ResponseEntity<ApiResponse<Void>> handleLazy(LazyInitializationException ex, HttpServletRequest req) {
+    log.error("hibernate.lazy_init path={} message={}", req.getRequestURI(), ex.getMessage());
+    return build(HttpStatus.INTERNAL_SERVER_ERROR, "Internal error", req.getRequestURI());
   }
 
   @ExceptionHandler(Exception.class)
@@ -71,7 +106,6 @@ public class GlobalExceptionHandler {
   }
 
   private ResponseEntity<ApiResponse<Void>> build(HttpStatus status, String message, String path) {
-    ErrorEnvelope err = new ErrorEnvelope(Instant.now(), status.value(), message, path);
     if (status.is5xxServerError()) {
       log.error("api.error status={} path={} message={}", status.value(), path, message);
     } else if (status == HttpStatus.FORBIDDEN) {
@@ -79,6 +113,6 @@ public class GlobalExceptionHandler {
     } else {
       log.info("api.client_error status={} path={} message={}", status.value(), path, message);
     }
-    return ResponseEntity.status(status).body(new ApiResponse<>(false, null, err));
+    return ResponseEntity.status(status).body(ApiResponse.error(message));
   }
 }

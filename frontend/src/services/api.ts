@@ -47,7 +47,11 @@ async function request<T>(path: string, init: RequestInit, allowRefresh = true):
       const body = (await res.json()) as Wrapped<T>;
       if (body && typeof body.success === "boolean") {
         if (body.success) return body.data as T;
-        const err: ApiError = { status: res.status, message: body?.error?.message ?? "Request failed" };
+        const errMsg =
+          typeof (body as any).error === "string"
+            ? ((body as any).error as string)
+            : ((body as any).error?.message as string | undefined);
+        const err: ApiError = { status: res.status, message: errMsg ?? "Request failed" };
         throw err;
       }
       return body as any as T;
@@ -67,7 +71,7 @@ async function request<T>(path: string, init: RequestInit, allowRefresh = true):
     const ct = res.headers.get("content-type") ?? "";
     if (ct.includes("application/json")) {
       const body = (await res.json()) as any;
-      message = body?.error?.message ?? body?.message ?? message;
+      message = (typeof body?.error === "string" ? body.error : body?.error?.message) ?? body?.message ?? message;
     }
   } catch {}
 
@@ -104,7 +108,7 @@ export const api = {
       let message = res.statusText || "Upload failed";
       try {
         const body = await res.json();
-        message = body?.error?.message ?? body?.message ?? message;
+        message = (typeof body?.error === "string" ? body.error : body?.error?.message) ?? body?.message ?? message;
       } catch {}
       throw { status: res.status, message } satisfies ApiError;
     }
