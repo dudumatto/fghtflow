@@ -76,6 +76,22 @@ Frontend:
 - `frontend/src/pages/`: Login, Dashboard, Perfil, Lutas, Competicoes, Treinos
 - `frontend/src/components/`: UI primitives + skeletons
 
+## Testing Notes (Windows)
+
+If PowerShell blocks `npm` scripts (`running scripts is disabled`), run via `cmd`:
+
+```bat
+cd frontend
+cmd /c "npm.cmd run build"
+```
+
+Typecheck only:
+
+```bat
+cd frontend
+cmd /c "node_modules\\.bin\\tsc.cmd -b"
+```
+
 ## Security
 
 - JWT access token for API calls (RBAC: `ATLETA`, `PROFESSOR`, `ADMIN`)

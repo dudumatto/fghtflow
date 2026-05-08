@@ -1,7 +1,7 @@
 # FightFlow Test Report
 
-Date: 2026-05-06
-Environment: Local + Codex sandbox (Windows / PowerShell)
+Date: 2026-05-08
+Environment: Windows (Codex desktop / PowerShell)
 
 ## Status
 APROVADO COM PENDENCIAS
@@ -14,7 +14,7 @@ Local status: core auth flows and athlete/dashboard endpoints were validated suc
 
 Sandbox note: the `500` failures observed in this report were specific to the Codex sandbox and are most likely related to PostgreSQL credential/config mismatch and/or environment restrictions. This is not considered a confirmed bug in the application logic.
 
-## Commands Executed
+## Commands Executed (2026-05-08)
 
 Architecture / config inspection:
 - `Get-Content` / `Get-ChildItem` over:
@@ -31,6 +31,13 @@ Backend HTTP probes (via `curl.exe`):
 
 Frontend build:
 - `cd frontend; cmd /c npm run build`
+
+Backend tests (local):
+- `cd backend; mvn.cmd test` (com repo local override; ver abaixo)
+
+Frontend (local):
+- `cd frontend; cmd /c "node_modules\\.bin\\tsc.cmd -b"`
+- `cd frontend; cmd /c "npm.cmd run build"` (falhou; ver abaixo)
 
 ## Architecture Read
 
@@ -66,6 +73,14 @@ Action: document/standardize the expected env var name.
 - Added `.gitignore` to avoid committing runtime artifacts (`uploads/`, `node_modules/`, `target/`).
 
 ## Backend Test Results
+
+### Maven (2026-05-08)
+Executado com sucesso:
+- `cd backend; cmd /c "set JAVA_HOME=C:\\Program Files\\Java\\jdk-26.0.1&& set PATH=%JAVA_HOME%\\bin;%PATH%&& C:\\ProgramData\\chocolatey\\lib\\maven\\apache-maven-3.9.15\\bin\\mvn.cmd -Dmaven.repo.local=C:\\Users\\Administrator\\Desktop\\fullstack\\backend\\.m2\\repository test"`
+
+Resultado:
+- `BUILD SUCCESS`
+- `Tests run: 24, Failures: 0, Errors: 0`
 
 ### Protected routes
 - `GET /atletas/me` without token: `403` (OK, consistent with current security handler).
@@ -123,6 +138,16 @@ Validacao alternativa que passou:
 - `cmd /c "cd frontend && node_modules\\.bin\\tsc.cmd -b"`
 
 Impact: nao foi possivel validar o pipeline do Vite build neste ambiente (Windows) por restricao/perm do spawn do `esbuild --service`.
+
+## Manual cURL (Blocked)
+
+Os testes manuais via `curl` (auth/planos/matriculas/mensalidades/pagamentos/bloqueios/aulas/presenca/graduacao/evolucao/dashboards) exigem o backend rodando contra PostgreSQL.
+
+Neste ambiente:
+- Docker daemon nao esta disponivel (nao existe o pipe `//./pipe/docker_engine`).
+- Nao ha PostgreSQL ouvindo em `127.0.0.1:5432`.
+
+Resultado: nao foi possivel subir o backend para executar os curls aqui.
 
 ## Bugs Found
 
