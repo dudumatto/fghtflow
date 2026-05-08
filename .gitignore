@@ -1,6 +1,8 @@
 /uploads/
 /backend/target/
 /frontend/node_modules/
+/frontend/tsconfig.tsbuildinfo
+/frontend/dist/
 cookies*.txt
 tmp_*/
 out.json

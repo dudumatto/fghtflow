@@ -93,6 +93,7 @@ export const api = {
       headers: { "Content-Type": "application/json" },
       body: body === undefined ? undefined : JSON.stringify(body)
     }),
+  del: <T>(path: string) => request<T>(path, { method: "DELETE" }),
   upload: async <T>(path: string, file: File) => {
     const url = `${baseUrl()}${path}`;
     const token = getToken();

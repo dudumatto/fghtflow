@@ -111,10 +111,18 @@ Blocked by auth failures:
 
 ## Frontend Test Results
 
-- `npm run build` failed with:
-  - `Error: spawn EPERM` from `esbuild` while loading `vite.config.ts`.
+- (2026-05-08) `npm run build` ainda falha com:
+  - `Error: spawn EPERM` do `esbuild` ao carregar `vite.config.ts`.
 
-Impact: cannot validate frontend build pipeline in this sandbox. May be environment restriction; re-run locally to confirm.
+Detalhe tecnico: neste ambiente, o `node` consegue executar `esbuild.exe --version`, mas falha ao iniciar o `esbuild` em modo `--service` com `stdio` em pipes (o que o Vite usa para bundle do config).
+
+Repro isolado (2026-05-08):
+- `cd frontend; node -e "require('esbuild').transformSync('export const x: number = 1',{loader:'ts'})"` -> `spawn EPERM`
+
+Validacao alternativa que passou:
+- `cmd /c "cd frontend && node_modules\\.bin\\tsc.cmd -b"`
+
+Impact: nao foi possivel validar o pipeline do Vite build neste ambiente (Windows) por restricao/perm do spawn do `esbuild --service`.
 
 ## Bugs Found
 

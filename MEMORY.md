@@ -8,6 +8,7 @@
 - Para erros previsiveis de cadastro/login: retornar status controlado (400/401/409) via handler; evitar 500.
 - Presenca em `Aula`: impedir duplicidade por `(aula_id, aluno_id)` (unique constraint + checagem no service) e barrar `PRESENTE` para aluno BLOQUEADO via `FinanceiroBloqueioService.assertPodeRegistrarPresenca`.
 - Graduacao/Evolucao: para historico por aluno, aplicar anti-IDOR por role (ATLETA so o proprio `alunoId`; PROFESSOR/ADMIN apenas mesma academia) e exigir `observacao` quando graduacao nao segue proximo passo esperado (mesma faixa grau+1 ou proxima faixa grau=0).
+- Maven local (ambiente Codex/Windows): se `mvn test` falhar com `LocalRepositoryNotAccessibleException` tentando usar `C:\\Users\\CodexSandboxOffline\\.m2`, rode com `-Dmaven.repo.local=C:\\Users\\Administrator\\Desktop\\fullstack\\backend\\.m2\\repository`.
 
 ## Decisoes arquiteturais
 - Controller -> Service -> Repository -> DTO (nao expor entities).
