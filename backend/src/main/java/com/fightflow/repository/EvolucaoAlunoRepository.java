@@ -6,5 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EvolucaoAlunoRepository extends JpaRepository<EvolucaoAluno, Long> {
   List<EvolucaoAluno> findAllByAlunoIdOrderByDataDesc(Long alunoId);
-}
 
+  long countByAlunoId(Long alunoId);
+}

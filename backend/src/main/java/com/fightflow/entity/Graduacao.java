@@ -59,6 +59,16 @@ public class Graduacao {
     this.faixa = faixa;
   }
 
+  @Transient
+  public Faixa getFaixaEnum() {
+    if (faixa == null) return null;
+    return Faixa.valueOf(faixa);
+  }
+
+  public void setFaixaEnum(Faixa faixa) {
+    this.faixa = faixa == null ? null : faixa.name();
+  }
+
   public int getGrau() {
     return grau;
   }

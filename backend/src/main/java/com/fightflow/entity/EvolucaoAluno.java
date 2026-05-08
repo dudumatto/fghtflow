@@ -56,6 +56,16 @@ public class EvolucaoAluno {
     this.tipo = tipo;
   }
 
+  @Transient
+  public TipoEvolucao getTipoEnum() {
+    if (tipo == null) return null;
+    return TipoEvolucao.valueOf(tipo);
+  }
+
+  public void setTipoEnum(TipoEvolucao tipo) {
+    this.tipo = tipo == null ? null : tipo.name();
+  }
+
   public String getDescricao() {
     return descricao;
   }
