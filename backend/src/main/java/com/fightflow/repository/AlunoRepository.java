@@ -1,6 +1,7 @@
 package com.fightflow.repository;
 
 import com.fightflow.entity.Aluno;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -16,4 +17,7 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long> {
   Optional<Aluno> findByUsuarioIdWithUsuarioAndAcademia(@Param("usuarioId") Long usuarioId);
 
   List<Aluno> findAllByAcademiaIdAndAtivoTrue(Long academiaId);
+
+  long countByAcademiaIdAndAtivoTrue(Long academiaId);
+  long countByAcademiaIdAndAtivoTrueAndCreatedAtGreaterThanEqual(Long academiaId, Instant from);
 }

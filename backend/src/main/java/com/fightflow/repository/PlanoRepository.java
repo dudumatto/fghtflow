@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface PlanoRepository extends JpaRepository<Plano, Long>, JpaSpecificationExecutor<Plano> {
   List<Plano> findAllByAtivoTrueOrderByNomeAsc();
+
+  long countByAcademiaIdAndAtivoTrue(Long academiaId);
 }

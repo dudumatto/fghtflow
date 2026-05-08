@@ -24,4 +24,6 @@ public interface MatriculaRepository extends JpaRepository<Matricula, Long>, Jpa
   @Lock(LockModeType.PESSIMISTIC_WRITE)
   @Query("select m from Matricula m where m.aluno.id = :alunoId and m.status = :status")
   List<Matricula> findAllByAlunoIdAndStatusForUpdate(@Param("alunoId") Long alunoId, @Param("status") MatriculaStatus status);
+
+  long countByAlunoAcademiaIdAndStatus(Long academiaId, MatriculaStatus status);
 }
