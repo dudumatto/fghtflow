@@ -14,6 +14,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -55,6 +56,11 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(PayloadTooLargeException.class)
   public ResponseEntity<ApiResponse<Void>> handleTooLarge(PayloadTooLargeException ex, HttpServletRequest req) {
     return build(HttpStatus.PAYLOAD_TOO_LARGE, ex.getMessage(), req.getRequestURI());
+  }
+
+  @ExceptionHandler(MaxUploadSizeExceededException.class)
+  public ResponseEntity<ApiResponse<Void>> handleMultipartTooLarge(MaxUploadSizeExceededException ex, HttpServletRequest req) {
+    return build(HttpStatus.PAYLOAD_TOO_LARGE, "File too large", req.getRequestURI());
   }
 
   @ExceptionHandler(UnsupportedMediaTypeException.class)

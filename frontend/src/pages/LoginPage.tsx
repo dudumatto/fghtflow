@@ -39,7 +39,7 @@ export default function LoginPage() {
       const path = mode === "login" ? "/auth/login" : "/auth/register";
       const res = await api.post<AuthResponse>(path, payload);
       auth.setAuth(res);
-      nav("/dashboard", { replace: true });
+      nav(res.role === "ATLETA" ? "/dashboard" : "/dashboard/admin", { replace: true });
     } catch (e2) {
       const ae = e2 as ApiError;
       setErr(`${ae.status}: ${ae.message}`);
@@ -79,10 +79,11 @@ export default function LoginPage() {
           ) : null}
 
           <form onSubmit={submit} className="space-y-3">
-            <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <Input label="Email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             <Input
               label="Password"
               type="password"
+              autoComplete={mode === "login" ? "current-password" : "new-password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -123,4 +124,3 @@ export default function LoginPage() {
     </div>
   );
 }
-

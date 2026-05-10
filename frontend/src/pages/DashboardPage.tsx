@@ -1,20 +1,27 @@
 import { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
 import Alert from "../components/Alert";
 import Card from "../components/Card";
 import Skeleton from "../components/Skeleton";
 import { api, type ApiError } from "../services/api";
 import type { AtletaDashboardResponse } from "../services/types";
+import { useAuth } from "../state/auth";
 
 function pct(x: number) {
   return `${Math.round(x * 100)}%`;
 }
 
 export default function DashboardPage() {
+  const auth = useAuth();
   const [data, setData] = useState<AtletaDashboardResponse | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (auth.role !== "ATLETA") {
+      setLoading(false);
+      return;
+    }
     let alive = true;
     setLoading(true);
     api
@@ -35,7 +42,11 @@ export default function DashboardPage() {
     return () => {
       alive = false;
     };
-  }, []);
+  }, [auth.role]);
+
+  if (auth.role === "PROFESSOR" || auth.role === "ADMIN") {
+    return <Navigate to="/dashboard/admin" replace />;
+  }
 
   if (loading) {
     return (

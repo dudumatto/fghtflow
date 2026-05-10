@@ -26,6 +26,7 @@
 
 ## Learnings
 - Evitar documentacao duplicada: `.codex` global e canonica; manter `PROJECT_CONTEXT.md`/`MEMORY.md` curtos e atualizados.
+- Task 8 (2026-05-08): `mvn test` passou usando `-Dmaven.repo.local=C:\\Users\\Administrator\\Desktop\\fullstack\\backend\\.m2\\repository`. No mesmo ambiente Windows, `npm run build` (Vite) falha com `spawn EPERM` do `esbuild --service` (repro: `node -e "require('esbuild').transformSync(...)"`), entao validar frontend por `tsc -b` e documentar em `TEST_REPORT.md`. Recomendar ignorar `frontend/tsconfig.tsbuildinfo` no `.gitignore`.
 
 ## Problemas recorrentes
 - Mismatch de credenciais/config DB entre ambientes (Docker vs `application.yml` vs env vars).
