@@ -10,6 +10,7 @@ import LutasPage from "./pages/LutasPage";
 import CompeticoesPage from "./pages/CompeticoesPage";
 import TreinosPage from "./pages/TreinosPage";
 import AlunosPage from "./pages/AlunosPage";
+import AtletasPage from "./pages/AtletasPage";
 import PlanosPage from "./pages/PlanosPage";
 import MensalidadesPage from "./pages/MensalidadesPage";
 import AgendaPage from "./pages/AgendaPage";
@@ -40,6 +41,7 @@ export default function App() {
           <Route path="/competicoes" element={<CompeticoesPage />} />
           <Route path="/treinos" element={<TreinosPage />} />
           <Route path="/alunos" element={<AlunosPage />} />
+          <Route path="/atletas" element={<AtletasPage />} />
           <Route path="/planos" element={<PlanosPage />} />
           <Route path="/mensalidades" element={<MensalidadesPage />} />
           <Route path="/agenda" element={<AgendaPage />} />

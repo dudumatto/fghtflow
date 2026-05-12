@@ -34,6 +34,9 @@ public class Atleta {
   private String categoria;
 
   @Column(nullable = false)
+  private boolean ativo = true;
+
+  @Column(nullable = false)
   private Instant createdAt = Instant.now();
 
   public Long getId() {
@@ -90,6 +93,14 @@ public class Atleta {
 
   public void setCategoria(String categoria) {
     this.categoria = categoria;
+  }
+
+  public boolean isAtivo() {
+    return ativo;
+  }
+
+  public void setAtivo(boolean ativo) {
+    this.ativo = ativo;
   }
 
   public Instant getCreatedAt() {

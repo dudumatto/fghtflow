@@ -30,6 +30,12 @@ public class Aluno {
   @Column(nullable = false)
   private boolean ativo = true;
 
+  @Column(length = 30)
+  private String faixaAtual;
+
+  @Column(nullable = false)
+  private int grauAtual = 0;
+
   @Column(nullable = false)
   private Instant createdAt = Instant.now();
 
@@ -73,6 +79,22 @@ public class Aluno {
     this.ativo = ativo;
   }
 
+  public String getFaixaAtual() {
+    return faixaAtual;
+  }
+
+  public void setFaixaAtual(String faixaAtual) {
+    this.faixaAtual = faixaAtual;
+  }
+
+  public int getGrauAtual() {
+    return grauAtual;
+  }
+
+  public void setGrauAtual(int grauAtual) {
+    this.grauAtual = grauAtual;
+  }
+
   public Instant getCreatedAt() {
     return createdAt;
   }
@@ -81,4 +103,3 @@ public class Aluno {
     this.createdAt = createdAt;
   }
 }
-

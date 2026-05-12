@@ -6,6 +6,6 @@ public record AuthResponse(
     String token,
     Long usuarioId,
     Role role,
-    Long academiaId
+    Long academiaId,
+    String academiaNome
 ) {}
-

@@ -65,7 +65,8 @@ public class AuthController {
     RefreshTokenService.Refreshed refreshed = refreshTokenService.refresh(refreshToken);
     var u = refreshed.user();
     Long academiaId = u.getAcademia() == null ? null : u.getAcademia().getId();
-    AuthResponse auth = new AuthResponse(refreshed.issued().accessToken(), u.getId(), u.getRole(), academiaId);
+    String academiaNome = u.getAcademia() == null ? null : u.getAcademia().getNome();
+    AuthResponse auth = new AuthResponse(refreshed.issued().accessToken(), u.getId(), u.getRole(), academiaId, academiaNome);
     return ResponseEntity.ok()
         .header(HttpHeaders.SET_COOKIE, refreshCookie(refreshed.issued().refreshToken()))
         .body(ApiResponse.ok(auth));

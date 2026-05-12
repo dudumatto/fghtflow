@@ -70,6 +70,23 @@ public class AcademiaScopeService {
 
   @Transactional
   public void vincularProfessorResponsavel(Usuario professor, Academia academia) {
+    vincularProfessorAcademia(professor, academia, ProfessorAcademiaPapel.RESPONSAVEL);
+  }
+
+  @Transactional
+  public void vincularProfessorAcademia(Long professorId, Long academiaId, ProfessorAcademiaPapel papel) {
+    Usuario professor = usuarioRepository.findById(professorId).orElseThrow(() -> new NotFoundException("Professor not found"));
+    Academia academia = academiaRepository.findById(academiaId).orElseThrow(() -> new NotFoundException("Academia not found"));
+    vincularProfessorAcademia(professor, academia, papel);
+  }
+
+  @Transactional
+  public void garantirVinculoProfessorAcademia(Long professorId, Long academiaId) {
+    vincularProfessorAcademia(professorId, academiaId, ProfessorAcademiaPapel.RESPONSAVEL);
+  }
+
+  @Transactional
+  public void vincularProfessorAcademia(Usuario professor, Academia academia, ProfessorAcademiaPapel papel) {
     if (professor == null || professor.getRole() != Role.PROFESSOR || academia == null || academia.getId() == null) {
       return;
     }
@@ -78,7 +95,7 @@ public class AcademiaScopeService {
         .orElseGet(ProfessorAcademia::new);
     vinculo.setProfessor(professor);
     vinculo.setAcademia(academia);
-    vinculo.setPapel(ProfessorAcademiaPapel.RESPONSAVEL);
+    vinculo.setPapel(papel == null ? ProfessorAcademiaPapel.RESPONSAVEL : papel);
     vinculo.setAtivo(true);
     professorAcademiaRepository.save(vinculo);
   }

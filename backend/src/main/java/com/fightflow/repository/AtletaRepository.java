@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface AtletaRepository extends JpaRepository<Atleta, Long> {
   Optional<Atleta> findByUsuarioId(Long usuarioId);
+  Optional<Atleta> findByAlunoId(Long alunoId);
 
   @Query("""
       select a
@@ -22,4 +23,8 @@ public interface AtletaRepository extends JpaRepository<Atleta, Long> {
   Optional<Atleta> findByUsuarioIdWithUsuarioAndAcademia(@Param("usuarioId") Long usuarioId);
 
   List<Atleta> findAllByAcademiaId(Long academiaId);
+  List<Atleta> findAllByAcademiaIdInOrderByUsuarioEmailAsc(List<Long> academiaIds);
+  List<Atleta> findAllByAcademiaIdInAndAtivoTrueOrderByUsuarioEmailAsc(List<Long> academiaIds);
+  List<Atleta> findAllByAtivoTrueOrderByUsuarioEmailAsc();
+  List<Atleta> findAllByOrderByUsuarioEmailAsc();
 }

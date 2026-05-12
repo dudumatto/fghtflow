@@ -15,6 +15,7 @@ export type AuthResponse = {
   usuarioId: number;
   role: Role;
   academiaId: number | null;
+  academiaNome: string | null;
 };
 
 export type AcademiaResponse = {
@@ -31,6 +32,64 @@ export type AcademiaResponse = {
 export type AcademiaResumoResponse = {
   id: number;
   nome: string;
+};
+
+export type SelectOptionResponse = {
+  id: number;
+  nome: string;
+};
+
+export type AlunoResponse = {
+  id: number;
+  usuarioId: number;
+  nome: string;
+  email: string;
+  role: Role;
+  academiaId: number;
+  academiaNome: string;
+  ativo: boolean;
+  faixaAtual: string | null;
+  grauAtual: number;
+  createdAt: string;
+};
+
+export type AlunoPayload = {
+  email?: string;
+  password?: string;
+  nome?: string;
+  academiaId?: number;
+  ativo?: boolean;
+  faixaAtual?: string | null;
+  grauAtual?: number;
+};
+
+export type AtletaResponse = {
+  id: number;
+  usuarioId: number;
+  alunoId: number | null;
+  nome: string;
+  email: string;
+  role: Role;
+  academiaId: number;
+  academiaNome: string;
+  ativo: boolean;
+  faixa: string | null;
+  grauAtual: number;
+  peso: number | null;
+  categoria: string | null;
+  createdAt: string;
+};
+
+export type AtletaPayload = {
+  email?: string;
+  password?: string;
+  nome?: string;
+  academiaId?: number;
+  ativo?: boolean;
+  faixa?: string | null;
+  grauAtual?: number;
+  peso?: number | null;
+  categoria?: string | null;
 };
 
 export type AtletaProfileResponse = {

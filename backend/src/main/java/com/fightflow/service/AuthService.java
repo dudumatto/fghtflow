@@ -99,8 +99,9 @@ public class AuthService {
     }
 
     Long academiaId = (academia == null) ? null : academia.getId();
+    String academiaNome = (academia == null) ? null : academia.getNome();
     RefreshTokenService.Issued issued = refreshTokenService.issueForUser(u);
-    return new AuthPair(new AuthResponse(issued.accessToken(), u.getId(), u.getRole(), academiaId), issued.refreshToken());
+    return new AuthPair(new AuthResponse(issued.accessToken(), u.getId(), u.getRole(), academiaId, academiaNome), issued.refreshToken());
   }
 
   public AuthPair login(LoginRequest req) {
@@ -109,7 +110,8 @@ public class AuthService {
     com.fightflow.security.UserPrincipal principal = (com.fightflow.security.UserPrincipal) auth.getPrincipal();
     Usuario u = usuarioRepository.findById(principal.getId()).orElseThrow(() -> new NotFoundException("User not found"));
     RefreshTokenService.Issued issued = refreshTokenService.issueForUser(u);
-    return new AuthPair(new AuthResponse(issued.accessToken(), principal.getId(), principal.getRole(), principal.getAcademiaId()),
+    String academiaNome = u.getAcademia() == null ? null : u.getAcademia().getNome();
+    return new AuthPair(new AuthResponse(issued.accessToken(), principal.getId(), principal.getRole(), principal.getAcademiaId(), academiaNome),
         issued.refreshToken());
   }
 

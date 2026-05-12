@@ -17,6 +17,10 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long> {
   Optional<Aluno> findByUsuarioIdWithUsuarioAndAcademia(@Param("usuarioId") Long usuarioId);
 
   List<Aluno> findAllByAcademiaIdAndAtivoTrue(Long academiaId);
+  List<Aluno> findAllByAcademiaIdInOrderByNomeAsc(List<Long> academiaIds);
+  List<Aluno> findAllByAcademiaIdInAndAtivoTrueOrderByNomeAsc(List<Long> academiaIds);
+  List<Aluno> findAllByAtivoTrueOrderByNomeAsc();
+  List<Aluno> findAllByOrderByNomeAsc();
 
   long countByAcademiaIdAndAtivoTrue(Long academiaId);
   long countByAcademiaIdAndAtivoTrueAndCreatedAtGreaterThanEqual(Long academiaId, Instant from);

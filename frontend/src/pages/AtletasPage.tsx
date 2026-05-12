@@ -5,9 +5,9 @@ import Card from "../components/Card";
 import Input from "../components/Input";
 import Spinner from "../components/Spinner";
 import { academiasService } from "../services/academias";
-import { alunosService } from "../services/alunos";
 import type { ApiError } from "../services/api";
-import type { AcademiaResumoResponse, AlunoResponse } from "../services/types";
+import { atletasService } from "../services/atletas";
+import type { AcademiaResumoResponse, AtletaResponse } from "../services/types";
 import { useAuth } from "../state/auth";
 
 type FormState = {
@@ -15,8 +15,10 @@ type FormState = {
   email: string;
   password: string;
   academiaId: string;
-  faixaAtual: string;
+  faixa: string;
   grauAtual: string;
+  peso: string;
+  categoria: string;
 };
 
 const emptyForm: FormState = {
@@ -24,18 +26,20 @@ const emptyForm: FormState = {
   email: "",
   password: "",
   academiaId: "",
-  faixaAtual: "",
-  grauAtual: "0"
+  faixa: "",
+  grauAtual: "0",
+  peso: "",
+  categoria: ""
 };
 
-export default function AlunosPage() {
+export default function AtletasPage() {
   const auth = useAuth();
   const allowed = auth.role === "ADMIN" || auth.role === "PROFESSOR";
 
-  const [items, setItems] = useState<AlunoResponse[]>([]);
+  const [items, setItems] = useState<AtletaResponse[]>([]);
   const [academias, setAcademias] = useState<AcademiaResumoResponse[]>([]);
   const [form, setForm] = useState<FormState>(emptyForm);
-  const [editing, setEditing] = useState<AlunoResponse | null>(null);
+  const [editing, setEditing] = useState<AtletaResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -43,9 +47,9 @@ export default function AlunosPage() {
   async function load() {
     setLoading(true);
     try {
-      const [academiasData, alunosData] = await Promise.all([academiasService.select(), alunosService.list()]);
+      const [academiasData, atletasData] = await Promise.all([academiasService.select(), atletasService.list()]);
       setAcademias(academiasData);
-      setItems(alunosData);
+      setItems(atletasData);
       setErr(null);
     } catch (e) {
       const ae = e as ApiError;
@@ -68,15 +72,17 @@ export default function AlunosPage() {
     setForm((current) => ({ ...current, ...patch }));
   }
 
-  function startEdit(item: AlunoResponse) {
+  function startEdit(item: AtletaResponse) {
     setEditing(item);
     setForm({
       nome: item.nome,
       email: item.email,
       password: "",
       academiaId: String(item.academiaId),
-      faixaAtual: item.faixaAtual ?? "",
-      grauAtual: String(item.grauAtual ?? 0)
+      faixa: item.faixa ?? "",
+      grauAtual: String(item.grauAtual ?? 0),
+      peso: item.peso == null ? "" : String(item.peso),
+      categoria: item.categoria ?? ""
     });
   }
 
@@ -94,13 +100,15 @@ export default function AlunosPage() {
         email: form.email.trim(),
         password: form.password.trim() || undefined,
         academiaId: Number(form.academiaId),
-        faixaAtual: form.faixaAtual.trim() || null,
-        grauAtual: Number(form.grauAtual || 0)
+        faixa: form.faixa.trim() || null,
+        grauAtual: Number(form.grauAtual || 0),
+        peso: form.peso.trim() ? Number(form.peso) : null,
+        categoria: form.categoria.trim() || null
       };
       if (editing) {
-        await alunosService.update(editing.id, payload);
+        await atletasService.update(editing.id, payload);
       } else {
-        await alunosService.create(payload);
+        await atletasService.create(payload);
       }
       resetForm();
       await load();
@@ -112,11 +120,11 @@ export default function AlunosPage() {
     }
   }
 
-  async function inativar(item: AlunoResponse) {
+  async function inativar(item: AtletaResponse) {
     setSaving(true);
     setErr(null);
     try {
-      await alunosService.remove(item.id);
+      await atletasService.remove(item.id);
       await load();
     } catch (e) {
       const ae = e as ApiError;
@@ -134,14 +142,14 @@ export default function AlunosPage() {
   return (
     <div className="space-y-3">
       <div className="mb-1">
-        <div className="text-xl font-semibold">Alunos</div>
-        <div className="mt-1 text-sm text-muted">Cadastro com academia obrigatoria</div>
+        <div className="text-xl font-semibold">Atletas</div>
+        <div className="mt-1 text-sm text-muted">Cadastro esportivo vinculado a academia</div>
       </div>
 
       {err ? <Alert message={err} /> : null}
 
       <Card>
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
           <Input label="Nome" value={form.nome} onChange={(e) => patchForm({ nome: e.target.value })} />
           <Input label="Email" type="email" value={form.email} onChange={(e) => patchForm({ email: e.target.value })} />
           <Input
@@ -165,19 +173,14 @@ export default function AlunosPage() {
               ))}
             </select>
           </label>
-          <Input label="Faixa" value={form.faixaAtual} onChange={(e) => patchForm({ faixaAtual: e.target.value })} />
-          <Input
-            label="Grau"
-            type="number"
-            min={0}
-            max={4}
-            value={form.grauAtual}
-            onChange={(e) => patchForm({ grauAtual: e.target.value })}
-          />
+          <Input label="Faixa" value={form.faixa} onChange={(e) => patchForm({ faixa: e.target.value })} />
+          <Input label="Grau" type="number" min={0} max={4} value={form.grauAtual} onChange={(e) => patchForm({ grauAtual: e.target.value })} />
+          <Input label="Peso" type="number" step="0.1" value={form.peso} onChange={(e) => patchForm({ peso: e.target.value })} />
+          <Input label="Categoria" value={form.categoria} onChange={(e) => patchForm({ categoria: e.target.value })} />
         </div>
         <div className="mt-3 flex flex-wrap gap-2">
           <Button onClick={submit} disabled={saving || !canSubmit}>
-            {saving ? <Spinner /> : editing ? "Salvar" : "Criar aluno"}
+            {saving ? <Spinner /> : editing ? "Salvar" : "Criar atleta"}
           </Button>
           {editing ? (
             <Button variant="ghost" onClick={resetForm} disabled={saving}>
@@ -189,16 +192,16 @@ export default function AlunosPage() {
 
       <Card>
         {items.length === 0 ? (
-          <div className="text-sm text-muted">Nenhum aluno encontrado.</div>
+          <div className="text-sm text-muted">Nenhum atleta encontrado.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="text-muted">
                 <tr className="border-b border-border">
-                  <th className="py-2 text-left font-medium">Aluno</th>
-                  <th className="py-2 text-left font-medium">Email</th>
+                  <th className="py-2 text-left font-medium">Atleta</th>
                   <th className="py-2 text-left font-medium">Academia</th>
                   <th className="py-2 text-left font-medium">Faixa</th>
+                  <th className="py-2 text-left font-medium">Categoria</th>
                   <th className="py-2 text-left font-medium">Status</th>
                   <th className="py-2 text-left font-medium">Acoes</th>
                 </tr>
@@ -208,10 +211,11 @@ export default function AlunosPage() {
                   <tr key={item.id} className="border-b border-border/60">
                     <td className="py-2">
                       {item.nome} <span className="text-xs text-muted">#{item.id}</span>
+                      <div className="text-xs text-muted">{item.email}</div>
                     </td>
-                    <td className="py-2">{item.email}</td>
                     <td className="py-2">{item.academiaNome}</td>
-                    <td className="py-2">{item.faixaAtual ?? "-"} / {item.grauAtual} grau</td>
+                    <td className="py-2">{item.faixa ?? "-"} / {item.grauAtual} grau</td>
+                    <td className="py-2">{item.categoria ?? "-"}</td>
                     <td className="py-2">{item.ativo ? "Ativo" : "Inativo"}</td>
                     <td className="py-2">
                       <div className="flex flex-wrap gap-2">
