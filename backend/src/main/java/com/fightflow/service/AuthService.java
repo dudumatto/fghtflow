@@ -33,6 +33,7 @@ public class AuthService {
   private final PasswordEncoder passwordEncoder;
   private final AuthenticationManager authenticationManager;
   private final RefreshTokenService refreshTokenService;
+  private final AcademiaScopeService academiaScopeService;
 
   public AuthService(
       UsuarioRepository usuarioRepository,
@@ -41,7 +42,8 @@ public class AuthService {
       AtletaRepository atletaRepository,
       PasswordEncoder passwordEncoder,
       AuthenticationManager authenticationManager,
-      RefreshTokenService refreshTokenService
+      RefreshTokenService refreshTokenService,
+      AcademiaScopeService academiaScopeService
   ) {
     this.usuarioRepository = usuarioRepository;
     this.academiaRepository = academiaRepository;
@@ -50,6 +52,7 @@ public class AuthService {
     this.passwordEncoder = passwordEncoder;
     this.authenticationManager = authenticationManager;
     this.refreshTokenService = refreshTokenService;
+    this.academiaScopeService = academiaScopeService;
   }
 
   @Transactional
@@ -67,6 +70,12 @@ public class AuthService {
     u.setRole(role);
     u.setAcademia(academia);
     u = usuarioRepository.save(u);
+
+    if (u.getRole() == Role.PROFESSOR && academia != null) {
+      academia.setProfessorResponsavel(u);
+      academiaRepository.save(academia);
+      academiaScopeService.vincularProfessorResponsavel(u, academia);
+    }
 
     if (u.getRole() == Role.ATLETA) {
       if (academia == null) {

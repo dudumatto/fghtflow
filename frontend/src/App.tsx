@@ -4,6 +4,7 @@ import RequireAuth from "./layout/RequireAuth";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
+import AcademiasPage from "./pages/AcademiasPage";
 import PerfilPage from "./pages/PerfilPage";
 import LutasPage from "./pages/LutasPage";
 import CompeticoesPage from "./pages/CompeticoesPage";
@@ -33,6 +34,7 @@ export default function App() {
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/dashboard/admin" element={<AdminDashboardPage />} />
+          <Route path="/academias" element={<AcademiasPage />} />
           <Route path="/perfil" element={<PerfilPage />} />
           <Route path="/lutas" element={<LutasPage />} />
           <Route path="/competicoes" element={<CompeticoesPage />} />

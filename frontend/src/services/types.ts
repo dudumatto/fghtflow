@@ -17,6 +17,22 @@ export type AuthResponse = {
   academiaId: number | null;
 };
 
+export type AcademiaResponse = {
+  id: number;
+  nome: string;
+  endereco: string | null;
+  ativo: boolean;
+  professorResponsavelId: number | null;
+  professorResponsavelNome: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type AcademiaResumoResponse = {
+  id: number;
+  nome: string;
+};
+
 export type AtletaProfileResponse = {
   atletaId: number;
   usuarioId: number;

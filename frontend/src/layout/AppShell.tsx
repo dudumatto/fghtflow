@@ -8,6 +8,7 @@ type NavItem = { to: string; label: string; roles?: Role[] };
 const nav: NavItem[] = [
   { to: "/dashboard", label: "Dashboard", roles: ["ATLETA"] },
   { to: "/dashboard/admin", label: "Dashboard admin", roles: ["PROFESSOR", "ADMIN"] },
+  { to: "/academias", label: "Academias", roles: ["PROFESSOR", "ADMIN"] },
   { to: "/alunos", label: "Alunos", roles: ["PROFESSOR", "ADMIN"] },
   { to: "/planos", label: "Planos", roles: ["PROFESSOR", "ADMIN"] },
   { to: "/mensalidades", label: "Mensalidades", roles: ["ATLETA", "PROFESSOR", "ADMIN"] },
@@ -62,4 +63,3 @@ export default function AppShell() {
     </div>
   );
 }
-
