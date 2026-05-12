@@ -6,3 +6,6 @@
 cookies*.txt
 tmp_*/
 out.json
+
+frontend/vite-dev*.log
+.playwright-mcp/
