@@ -7,6 +7,7 @@ import Input from "../components/Input";
 import Spinner from "../components/Spinner";
 import { api, type ApiError } from "../services/api";
 import type { AuthResponse, Role } from "../services/types";
+import { defaultRouteForRole } from "../permissions";
 import { useAuth } from "../state/auth";
 
 type Mode = "login" | "register";
@@ -39,7 +40,7 @@ export default function LoginPage() {
       const path = mode === "login" ? "/auth/login" : "/auth/register";
       const res = await api.post<AuthResponse>(path, payload);
       auth.setAuth(res);
-      nav(res.role === "ATLETA" ? "/dashboard" : "/dashboard/admin", { replace: true });
+      nav(defaultRouteForRole(res.role), { replace: true });
     } catch (e2) {
       const ae = e2 as ApiError;
       setErr(`${ae.status}: ${ae.message}`);
@@ -99,16 +100,17 @@ export default function LoginPage() {
                     value={role}
                     onChange={(e) => setRole(e.target.value as Role)}
                   >
+                    <option value="ALUNO">ALUNO</option>
                     <option value="ATLETA">ATLETA</option>
                     <option value="PROFESSOR">PROFESSOR</option>
                   </select>
                 </label>
                 <Input
                   label="Academia (nome)"
-                  placeholder={role === "PROFESSOR" ? "Obrigatorio para professor" : "Opcional"}
+                  placeholder={role === "ADMIN" ? "Opcional" : "Obrigatorio"}
                   value={academiaNome}
                   onChange={(e) => setAcademiaNome(e.target.value)}
-                  required={role === "PROFESSOR"}
+                  required={role !== "ADMIN"}
                 />
               </div>
             ) : null}

@@ -1,4 +1,4 @@
-export type Role = "ATLETA" | "PROFESSOR" | "ADMIN";
+export type Role = "ALUNO" | "ATLETA" | "PROFESSOR" | "ADMIN";
 
 export type ApiPage<T> = {
   items: T[];

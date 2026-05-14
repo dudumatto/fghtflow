@@ -46,6 +46,7 @@ public class EvolucaoAlunoService {
     return toResponse(e);
   }
 
+  @Transactional(readOnly = true)
   public List<EvolucaoAlunoResponse> list(UserPrincipal me, Long alunoId) {
     if (me.getRole() == Role.ATLETA) {
       Aluno aluno = alunoRepository.findByUsuarioIdWithUsuarioAndAcademia(me.getId())
@@ -66,6 +67,7 @@ public class EvolucaoAlunoService {
     return evolucaoAlunoRepository.findAllByAlunoIdOrderByDataDesc(alunoId).stream().map(this::toResponse).toList();
   }
 
+  @Transactional(readOnly = true)
   public long countForAluno(UserPrincipal me, Long alunoId) {
     if (alunoId == null) return 0;
     if (me.getRole() == Role.ATLETA) {
@@ -108,4 +110,3 @@ public class EvolucaoAlunoService {
     );
   }
 }
-

@@ -39,6 +39,7 @@ public class PresencaAulaService {
     this.financeiroBloqueioService = financeiroBloqueioService;
   }
 
+  @Transactional(readOnly = true)
   public List<PresencaAulaResponse> list(UserPrincipal me, Long aulaId) {
     Aula aula = loadAndAssertInAcademia(me, aulaId);
 
@@ -46,7 +47,7 @@ public class PresencaAulaService {
       return presencaAulaRepository.findAllByAulaId(aula.getId()).stream().map(this::toResponse).toList();
     }
 
-    if (me.getRole() == Role.ATLETA) {
+    if (me.getRole() == Role.ALUNO || me.getRole() == Role.ATLETA) {
       Aluno aluno = alunoRepository.findByUsuarioIdWithUsuarioAndAcademia(me.getId())
           .orElseThrow(() -> new NotFoundException("Aluno not found"));
       if (!aluno.getAcademia().getId().equals(me.getAcademiaId())) {
@@ -143,4 +144,3 @@ public class PresencaAulaService {
     return new PresencaAulaResponse(p.getId(), p.getAluno().getId(), p.getStatus(), p.getRegistradaEm());
   }
 }
-

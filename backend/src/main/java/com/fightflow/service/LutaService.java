@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class LutaService {
@@ -33,6 +34,7 @@ public class LutaService {
     this.competicaoRepository = competicaoRepository;
   }
 
+  @Transactional
   public LutaResponse create(UserPrincipal me, LutaCreateRequest req) {
     Atleta atleta = atletaRepository.findById(req.atletaId()).orElseThrow(() -> new NotFoundException("Atleta not found"));
     assertCanAccessAtleta(me, atleta);
@@ -58,12 +60,14 @@ public class LutaService {
     return toResponse(lutaRepository.save(l));
   }
 
+  @Transactional(readOnly = true)
   public List<LutaResponse> listByAtleta(UserPrincipal me, Long atletaId) {
     Atleta atleta = atletaRepository.findById(atletaId).orElseThrow(() -> new NotFoundException("Atleta not found"));
     assertCanAccessAtleta(me, atleta);
     return lutaRepository.findAllByAtletaIdOrderByFoughtAtDesc(atletaId).stream().map(this::toResponse).toList();
   }
 
+  @Transactional(readOnly = true)
   public Page<LutaResponse> list(UserPrincipal me, Long atletaId, LutaResultado resultado, Instant dateFrom, Instant dateTo, Pageable pageable) {
     Specification<Luta> spec = Specification.where(LutaSpecs.resultado(resultado))
         .and(LutaSpecs.foughtAtFrom(dateFrom))

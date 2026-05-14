@@ -16,6 +16,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EvolucaoDashboardService {
@@ -33,6 +34,7 @@ public class EvolucaoDashboardService {
     this.evolucaoAlunoRepository = evolucaoAlunoRepository;
   }
 
+  @Transactional(readOnly = true)
   public EvolucaoDashboardResponse dashboardForAluno(UserPrincipal me, Long alunoId) {
     if (alunoId == null) throw new BadRequestException("alunoId is required");
 
@@ -77,4 +79,3 @@ public class EvolucaoDashboardService {
     return recs;
   }
 }
-

@@ -1,31 +1,11 @@
 import { NavLink, Outlet } from "react-router-dom";
 import Button from "../components/Button";
+import { getMenuItemsByRole } from "../permissions";
 import { useAuth } from "../state/auth";
-
-type Role = "ATLETA" | "PROFESSOR" | "ADMIN";
-type NavItem = { to: string; label: string; roles?: Role[] };
-
-const nav: NavItem[] = [
-  { to: "/dashboard", label: "Dashboard", roles: ["ATLETA"] },
-  { to: "/dashboard/admin", label: "Dashboard admin", roles: ["PROFESSOR", "ADMIN"] },
-  { to: "/academias", label: "Academias", roles: ["PROFESSOR", "ADMIN"] },
-  { to: "/alunos", label: "Alunos", roles: ["PROFESSOR", "ADMIN"] },
-  { to: "/atletas", label: "Atletas", roles: ["PROFESSOR", "ADMIN"] },
-  { to: "/planos", label: "Planos", roles: ["PROFESSOR", "ADMIN"] },
-  { to: "/mensalidades", label: "Mensalidades", roles: ["ATLETA", "PROFESSOR", "ADMIN"] },
-  { to: "/agenda", label: "Agenda", roles: ["ATLETA", "PROFESSOR", "ADMIN"] },
-  { to: "/graduacoes", label: "Graduacao", roles: ["ATLETA", "PROFESSOR", "ADMIN"] },
-  { to: "/evolucoes", label: "Evolucao", roles: ["ATLETA", "PROFESSOR", "ADMIN"] },
-  { to: "/perfil", label: "Perfil", roles: ["ATLETA", "PROFESSOR", "ADMIN"] },
-  { to: "/lutas", label: "Lutas", roles: ["ATLETA", "PROFESSOR", "ADMIN"] },
-  { to: "/competicoes", label: "Competicoes", roles: ["ATLETA", "PROFESSOR", "ADMIN"] },
-  { to: "/treinos", label: "Treinos", roles: ["ATLETA", "PROFESSOR", "ADMIN"] }
-];
 
 export default function AppShell() {
   const auth = useAuth();
-  const role: Role = (auth.role ?? "ATLETA") as Role;
-  const visible = nav.filter((n) => !n.roles || n.roles.includes(role));
+  const visible = getMenuItemsByRole(auth.role);
 
   return (
     <div className="min-h-screen">

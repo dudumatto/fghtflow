@@ -74,7 +74,7 @@ public class MatriculaService {
   @Transactional(readOnly = true)
   public Page<MatriculaResponse> list(UserPrincipal me, Long alunoId, MatriculaStatus status, Pageable pageable) {
     Specification<Matricula> spec;
-    if (me.getRole() == Role.ATLETA) {
+    if (isAlunoRole(me)) {
       spec = Specification.where(MatriculaSpecs.usuarioId(me.getId()));
       if (alunoId != null) {
         Aluno aluno = alunoRepository.findById(alunoId).orElseThrow(() -> new NotFoundException("Aluno not found"));
@@ -134,7 +134,7 @@ public class MatriculaService {
   }
 
   private void requireAlunoAccess(UserPrincipal me, Aluno aluno) {
-    if (me.getRole() == Role.ATLETA) {
+    if (isAlunoRole(me)) {
       if (!me.getId().equals(aluno.getUsuario().getId())) {
         throw new ForbiddenException("Aluno does not belong to current user");
       }
@@ -154,6 +154,10 @@ public class MatriculaService {
     if (!me.getAcademiaId().equals(academiaId)) {
       throw new ForbiddenException("Plano does not belong to your academia");
     }
+  }
+
+  private boolean isAlunoRole(UserPrincipal me) {
+    return me.getRole() == Role.ALUNO || me.getRole() == Role.ATLETA;
   }
 
   private MatriculaResponse toResponse(Matricula m) {

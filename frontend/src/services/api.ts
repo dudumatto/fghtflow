@@ -59,7 +59,7 @@ async function request<T>(path: string, init: RequestInit, allowRefresh = true):
     return (await res.text()) as any as T;
   }
 
-  if (res.status === 403 && allowRefresh && getToken()) {
+  if (res.status === 401 && allowRefresh && getToken()) {
     const newToken = await refreshToken();
     if (newToken) {
       return request<T>(path, init, false);

@@ -3,9 +3,14 @@
 /frontend/node_modules/
 /frontend/tsconfig.tsbuildinfo
 /frontend/dist/
+/frontend/test-results/
+/frontend/playwright-report/
+/frontend/.playwright-mcp/
+/frontend/.env.e2e
 cookies*.txt
 tmp_*/
 out.json
 
 frontend/vite-dev*.log
+frontend/debug.log
 .playwright-mcp/

@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CompeticaoService {
@@ -27,6 +28,7 @@ public class CompeticaoService {
     this.academiaRepository = academiaRepository;
   }
 
+  @Transactional
   public CompeticaoResponse create(UserPrincipal me, CompeticaoCreateRequest req) {
     if (me.getRole() != Role.PROFESSOR && me.getRole() != Role.ADMIN) {
       throw new ForbiddenException("Only PROFESSOR/ADMIN can create competicoes");
@@ -42,6 +44,7 @@ public class CompeticaoService {
     return toResponse(competicaoRepository.save(c));
   }
 
+  @Transactional(readOnly = true)
   public List<CompeticaoResponse> listForMyAcademia(UserPrincipal me) {
     if (me.getAcademiaId() == null) {
       throw new BadRequestException("User has no academia");
@@ -50,6 +53,7 @@ public class CompeticaoService {
         .stream().map(this::toResponse).toList();
   }
 
+  @Transactional(readOnly = true)
   public Page<CompeticaoResponse> list(UserPrincipal me, Instant dateFrom, Instant dateTo, Pageable pageable) {
     if (me.getAcademiaId() == null) {
       throw new BadRequestException("User has no academia");

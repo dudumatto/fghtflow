@@ -59,7 +59,7 @@ public class AlunoService {
     Usuario usuario = new Usuario();
     usuario.setEmail(req.email().trim().toLowerCase());
     usuario.setPasswordHash(passwordEncoder.encode(req.password()));
-    usuario.setRole(Role.ATLETA);
+    usuario.setRole(Role.ALUNO);
     usuario.setAcademia(academia);
     usuario = usuarioRepository.save(usuario);
 

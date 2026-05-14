@@ -77,10 +77,9 @@ public class AuthService {
       academiaScopeService.vincularProfessorResponsavel(u, academia);
     }
 
-    if (u.getRole() == Role.ATLETA) {
+    if (u.getRole() == Role.ALUNO || u.getRole() == Role.ATLETA) {
       if (academia == null) {
-        // Atleta is scoped to an academy (DB constraint); enforce explicitly to avoid 500s.
-        throw new BadRequestException("academiaId or academiaNome is required for ATLETA");
+        throw new BadRequestException("academiaId or academiaNome is required for " + u.getRole().name());
       }
       Aluno aluno = new Aluno();
       aluno.setUsuario(u);
@@ -88,14 +87,16 @@ public class AuthService {
       aluno.setNome(defaultAlunoNome(u.getEmail()));
       aluno = alunoRepository.save(aluno);
 
-      Atleta a = new Atleta();
-      a.setUsuario(u);
-      a.setAcademia(academia);
-      a.setAluno(aluno);
-      a.setFaixa(req.faixa());
-      a.setPeso(req.peso());
-      a.setCategoria(req.categoria());
-      atletaRepository.save(a);
+      if (u.getRole() == Role.ATLETA) {
+        Atleta a = new Atleta();
+        a.setUsuario(u);
+        a.setAcademia(academia);
+        a.setAluno(aluno);
+        a.setFaixa(req.faixa());
+        a.setPeso(req.peso());
+        a.setCategoria(req.categoria());
+        atletaRepository.save(a);
+      }
     }
 
     Long academiaId = (academia == null) ? null : academia.getId();
@@ -124,10 +125,9 @@ public class AuthService {
       a.setNome(academiaNome.trim());
       return academiaRepository.save(a);
     }
-    if (role == Role.PROFESSOR) {
-      throw new BadRequestException("academiaId or academiaNome is required for PROFESSOR");
+    if (role == Role.PROFESSOR || role == Role.ALUNO || role == Role.ATLETA) {
+      throw new BadRequestException("academiaId or academiaNome is required for " + role.name());
     }
-    // ATLETA/ADMIN can exist without an academy in this minimal scaffold.
     return null;
   }
 

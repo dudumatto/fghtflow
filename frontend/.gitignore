@@ -1,8 +1,13 @@
 
 # Playwright
 node_modules/
-/test-results/
-/playwright-report/
+test-results/
+playwright-report/
+frontend/test-results/
+frontend/playwright-report/
+frontend/.playwright-mcp/
+frontend/vite-dev*.log
+frontend/.env.e2e
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/

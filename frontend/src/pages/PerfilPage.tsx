@@ -7,8 +7,10 @@ import Spinner from "../components/Spinner";
 import Skeleton from "../components/Skeleton";
 import { api, type ApiError } from "../services/api";
 import type { AtletaProfileResponse } from "../services/types";
+import { useAuth } from "../state/auth";
 
 export default function PerfilPage() {
+  const auth = useAuth();
   const [profile, setProfile] = useState<AtletaProfileResponse | null>(null);
   const [faixa, setFaixa] = useState("");
   const [peso, setPeso] = useState<string>("");
@@ -19,6 +21,10 @@ export default function PerfilPage() {
   const [ok, setOk] = useState<string | null>(null);
 
   useEffect(() => {
+    if (auth.role !== "ATLETA") {
+      setLoading(false);
+      return;
+    }
     let alive = true;
     setLoading(true);
     api
@@ -42,7 +48,7 @@ export default function PerfilPage() {
     return () => {
       alive = false;
     };
-  }, []);
+  }, [auth.role]);
 
   async function save() {
     setOk(null);
@@ -76,7 +82,17 @@ export default function PerfilPage() {
     );
   }
   if (err) return <Alert message={err} />;
-  if (!profile) return <Alert kind="info" message="Perfil indisponivel" />;
+  if (!profile) {
+    return (
+      <Card className="max-w-xl">
+        <div className="text-xl font-semibold">Perfil</div>
+        <div className="mt-1 text-sm text-muted">{auth.role ?? "Usuario"}</div>
+        <div className="mt-4">
+          <Alert kind="info" message="Perfil esportivo disponivel apenas para ATLETA." />
+        </div>
+      </Card>
+    );
+  }
 
   return (
     <div>

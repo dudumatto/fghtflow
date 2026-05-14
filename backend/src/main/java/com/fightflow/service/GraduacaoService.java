@@ -55,8 +55,9 @@ public class GraduacaoService {
     return toResponse(g, foraDeOrdem);
   }
 
+  @Transactional(readOnly = true)
   public List<GraduacaoResponse> list(UserPrincipal me, Long alunoId) {
-    if (me.getRole() == Role.ATLETA) {
+    if (me.getRole() == Role.ALUNO || me.getRole() == Role.ATLETA) {
       Aluno aluno = alunoRepository.findByUsuarioIdWithUsuarioAndAcademia(me.getId())
           .orElseThrow(() -> new NotFoundException("Aluno not found"));
       if (alunoId != null && !aluno.getId().equals(alunoId)) {
@@ -119,4 +120,3 @@ public class GraduacaoService {
     );
   }
 }
-

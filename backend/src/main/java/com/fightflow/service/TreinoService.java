@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TreinoService {
@@ -30,6 +31,7 @@ public class TreinoService {
     this.academiaRepository = academiaRepository;
   }
 
+  @Transactional
   public TreinoResponse create(UserPrincipal me, TreinoCreateRequest req) {
     if (me.getRole() != Role.PROFESSOR && me.getRole() != Role.ADMIN) {
       throw new ForbiddenException("Only PROFESSOR/ADMIN can create treinos");
@@ -46,6 +48,7 @@ public class TreinoService {
     return toResponse(treinoRepository.save(t));
   }
 
+  @Transactional(readOnly = true)
   public List<TreinoResponse> listForMyAcademia(UserPrincipal me) {
     if (me.getAcademiaId() == null) {
       throw new BadRequestException("User has no academia");
@@ -54,6 +57,7 @@ public class TreinoService {
         .stream().map(this::toResponse).toList();
   }
 
+  @Transactional(readOnly = true)
   public Page<TreinoResponse> list(UserPrincipal me, Instant dateFrom, Instant dateTo, Pageable pageable) {
     if (me.getAcademiaId() == null) {
       throw new BadRequestException("User has no academia");

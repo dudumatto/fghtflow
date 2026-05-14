@@ -81,7 +81,7 @@ public class MensalidadeService {
       Pageable pageable
   ) {
     Specification<Mensalidade> spec;
-    if (me.getRole() == Role.ATLETA) {
+    if (isAlunoRole(me)) {
       spec = Specification.where(MensalidadeSpecs.usuarioId(me.getId()));
       if (alunoId != null) {
         Aluno aluno = alunoRepository.findById(alunoId).orElseThrow(() -> new NotFoundException("Aluno not found"));
@@ -165,7 +165,7 @@ public class MensalidadeService {
   }
 
   private void requireAlunoAccess(UserPrincipal me, Aluno aluno) {
-    if (me.getRole() == Role.ATLETA) {
+    if (isAlunoRole(me)) {
       if (!me.getId().equals(aluno.getUsuario().getId())) {
         throw new ForbiddenException("Aluno does not belong to current user");
       }
@@ -178,6 +178,10 @@ public class MensalidadeService {
     if (me.getAcademiaId() == null || !me.getAcademiaId().equals(aluno.getAcademia().getId())) {
       throw new ForbiddenException("Aluno does not belong to your academia");
     }
+  }
+
+  private boolean isAlunoRole(UserPrincipal me) {
+    return me.getRole() == Role.ALUNO || me.getRole() == Role.ATLETA;
   }
 
   private void requirePlanoInAcademia(UserPrincipal me, Plano plano) {
