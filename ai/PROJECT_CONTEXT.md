@@ -6,22 +6,23 @@
 ## Stack
 - Backend: Java 21, Spring Boot, Spring Security (JWT + RBAC + anti-IDOR), JPA/Hibernate, PostgreSQL
 - Frontend: React, Vite, Tailwind CSS
-- Infra local: PostgreSQL via Docker (ver `docker-compose.yml` e `README.md`)
+- Infra local: PostgreSQL via Docker (ver `docker-compose.yml` e `docs/setup.md`)
 
 ## Arquitetura
 - Backend em camadas: controller -> service -> repository -> dto
 - Response envelope: `{ success: true, data }` / `{ success: false, error }`
 - Seguranca:
   - Access token (JWT) + refresh token (cookie HttpOnly `ff_refresh`)
-  - RBAC: ATLETA, PROFESSOR, ADMIN
+  - RBAC: ALUNO, ATLETA, PROFESSOR, ADMIN
   - Anti-IDOR: validacao de ownership/escopo no service (nao expor entity)
 
 ## Estrutura principal
 - `backend/` API Spring Boot
 - `frontend/` app React
 - `docker-compose.yml` Postgres dev
-- `README.md` setup e comandos
-- `TEST_REPORT.md` status de auditoria e pendencias
+- `README.md` indice curto do projeto
+- `docs/setup.md` setup e comandos
+- `ai/TEST_REPORT.md` status de auditoria e pendencias
 
 ## Integracoes
 - PostgreSQL (dev via Docker)

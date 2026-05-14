@@ -21,12 +21,12 @@ Definir como os agentes devem:
 
 ## Sempre:
 
-1. Ler AGENTS.md
+1. Ler `AGENTS.md`
 2. Ler apenas contexto necessário
 3. Ler memória relacionada à tarefa atual
-4. Consultar PROJECT_CONTEXT.md
-5. Consultar README.md
-6. Consultar MEMORY.md quando necessário
+4. Consultar `ai/PROJECT_CONTEXT.md`
+5. Consultar `README.md` e `docs/` quando necessário
+6. Consultar `ai/MEMORY.md` quando necessário
 
 ---
 
@@ -153,9 +153,10 @@ Responsável por:
 
 ```txt
 README.md
-PROJECT_CONTEXT.md
-MEMORY.md
-TASKS.md
+docs/
+ai/PROJECT_CONTEXT.md
+ai/MEMORY.md
+ai/TASKS.md
 ```
 
 Responsável por:

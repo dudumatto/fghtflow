@@ -20,13 +20,13 @@
 - Transicoes financeiras que alteram status de `Matricula` devem usar lock/indices por `(aluno_id,status)`; consultas de inadimplencia usam `(aluno_id,status,vencimento)`.
 
 ## Integracoes importantes
-- PostgreSQL dev via Docker (credenciais padronizadas no `README.md` / `.env.example` quando existirem).
+- PostgreSQL dev via Docker (credenciais padronizadas em `docs/setup.md` / `.env.example` quando existirem).
 - Refresh token em cookie HttpOnly `ff_refresh` (fluxo: login -> refresh -> logout).
 - Upload seguro em disco por usuario: `/uploads/{usuarioId}/` + UUID; allowlist + limites.
 
 ## Learnings
-- Evitar documentacao duplicada: `.codex` global e canonica; manter `PROJECT_CONTEXT.md`/`MEMORY.md` curtos e atualizados.
-- Task 8 (2026-05-08): `mvn test` passou usando `-Dmaven.repo.local=C:\\Users\\Administrator\\Desktop\\fullstack\\backend\\.m2\\repository`. No mesmo ambiente Windows, `npm run build` (Vite) falha com `spawn EPERM` do `esbuild --service` (repro: `node -e "require('esbuild').transformSync(...)"`), entao validar frontend por `tsc -b` e documentar em `TEST_REPORT.md`. Recomendar ignorar `frontend/tsconfig.tsbuildinfo` no `.gitignore`.
+- Evitar documentacao duplicada: `.codex` global e canonica; manter `ai/PROJECT_CONTEXT.md`/`ai/MEMORY.md` curtos e atualizados.
+- Task 8 (2026-05-08): `mvn test` passou usando `-Dmaven.repo.local=C:\\Users\\Administrator\\Desktop\\fullstack\\backend\\.m2\\repository`. No mesmo ambiente Windows, `npm run build` (Vite) falha com `spawn EPERM` do `esbuild --service` (repro: `node -e "require('esbuild').transformSync(...)"`), entao validar frontend por `tsc -b` e documentar em `ai/TEST_REPORT.md`. Recomendar ignorar `frontend/tsconfig.tsbuildinfo` no `.gitignore`.
 
 ## Problemas recorrentes
 - Mismatch de credenciais/config DB entre ambientes (Docker vs `application.yml` vs env vars).
@@ -37,4 +37,4 @@
 - Ao adicionar endpoints de listagem: garantir `Pageable` + filtros + sort sem vazar dados entre usuarios/academias.
 
 ## 🔗 Relacionamentos
-- `PROJECT_CONTEXT.md` referencia partes sensiveis e integracoes; `TEST_REPORT.md` guarda estado de auditoria/pedencias.
+- `ai/PROJECT_CONTEXT.md` referencia partes sensiveis e integracoes; `ai/TEST_REPORT.md` guarda estado de auditoria/pedencias.
